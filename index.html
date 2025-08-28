@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supermarket Management</title>
+  <style>
+    body{font-family:Arial, sans-serif;margin:20px;background:#f9f9f9}
+    .box{max-width:700px;margin:auto;background:#fff;padding:16px;border-radius:8px}
+    h1{text-align:center}
+    table{width:100%;border-collapse:collapse;margin-top:10px}
+    th,td{border:1px solid #ccc;padding:6px;text-align:left}
+    th{background:#333;color:#fff}
+    input,button{margin:4px 0;padding:6px}
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>Supermarket Product Management</h1>
+    <input id="pid" placeholder="Product ID"> <br>
+    <input id="pname" placeholder="Product Name"> <br>
+    <input id="pprice" type="number" placeholder="Price"> <br>
+    <input id="pcat" placeholder="Category"> <br>
+    <button onclick="saveProduct()">Save</button>
+
+    <table>
+      <thead><tr><th>ID</th><th>Name</th><th>Price</th><th>Category</th><th>Action</th></tr></thead>
+      <tbody id="ptable"></tbody>
+    </table>
+  </div>
+
+  <script>
+    let products=[];
+    function render(){
+      ptable.innerHTML = products.map((p,i)=>`
+        <tr><td>${p.id}</td><td>${p.name}</td><td>₹${p.price}</td><td>${p.cat}</td>
+        <td><button onclick="edit(${i})">Edit</button><button onclick="del(${i})">Delete</button></td></tr>`).join('');
+    }
+    function saveProduct(){
+      const id=pid.value,name=pname.value,price=pprice.value,cat=pcat.value;
+      if(!id||!name) return alert('Enter ID & Name');
+      const obj={id,name,price,cat};
+      const i=products.findIndex(x=>x.id==id);
+      if(i>=0) products[i]=obj; else products.push(obj);
+      pid.value=pname.value=pprice.value=pcat.value='';
+      render();
+    }
+    function edit(i){let p=products[i];pid.value=p.id;pname.value=p.name;pprice.value=p.price;pcat.value=p.cat;}
+    function del(i){products.splice(i,1);render();}
+    render();
+  </script>
+</body>
+</html>
